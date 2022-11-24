@@ -27,4 +27,4 @@ python3 src/LSM.py 3
 ```
 
 ## Пример работы
-![]()
+![](https://github.com/Donskoy-Andrey/Numeric_Methods/blob/master/Least%20Square%20Method/data/images/image.png?raw=true)
