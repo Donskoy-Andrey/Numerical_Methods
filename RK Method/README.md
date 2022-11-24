@@ -17,3 +17,8 @@
 ```commandline
 python3 src/main.py data/data.csv
 ```
+
+## Пример работы
+![](https://github.com/Donskoy-Andrey/Numeric_Methods/blob/master/RK%20Method/data/images/output-0.025.png?raw=true)
+
+![](https://github.com/Donskoy-Andrey/Numeric_Methods/blob/master/RK%20Method/data/images/deviation.png?raw=true)

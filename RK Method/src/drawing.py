@@ -8,6 +8,7 @@ def draw(u_values: np.array, start: float, end: float, h: float) -> None:
     x_values = np.linspace(start, end, count)
 
     fig, axs = plt.subplots(1, 2, figsize=(20, 10))
+    fig.suptitle(f'Solution with h = {h}', c='black', size=40)
     axs[0].plot(x_values, u_values[:, 0], c='black')
     axs[0].legend(['y (x)'], prop={'size': 20})
     axs[1].plot(u_values[:, 0], u_values[:, 1], c='red')
