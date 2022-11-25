@@ -32,7 +32,6 @@ def dUdX(x: float, u: tuple) -> np.array:
     dUdX = f value = [U2, -U1 * cos(x)]
     """
     return np.array([u[1], -u[0] * np.cos(x)])
-    # return np.array([u[1], -x * u[1] + np.exp(-x*x)])
 
 
 def method(x0: float, h: float, initial_params: tuple, end: float,
