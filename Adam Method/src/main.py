@@ -34,7 +34,7 @@ def method(start: float, h: float, initial_params: float, end: float) -> tuple:
                ySolver(2, h),
                ySolver(3, h)]
 
-    all_x.extend([x, x+h, x+2*h])
+    all_x.extend([x, x + h, x + 2 * h])
     all_y.extend(yValues[:-1])
 
     x += 3 * h
