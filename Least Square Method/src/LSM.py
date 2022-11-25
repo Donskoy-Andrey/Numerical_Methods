@@ -34,7 +34,10 @@ def draw(xs: list, ys: list, x_points: list, y_points: list) -> None:
     plt.legend(title='Data Label', loc='upper left', labels=['standard line', None, 'polynom line'])
     sns.scatterplot(x=xs, y=ys, c='r', s=80, legend=False)
     plt.grid(True)
-    plt.savefig('data/images/image.png')
+    try:
+        plt.savefig(sys.argv[3])
+    except IndexError:
+        plt.savefig('data/images/image.png')
 
 
 def algorithm(xs: list, ys: list, k: int):
@@ -47,17 +50,19 @@ def algorithm(xs: list, ys: list, k: int):
 
     b = np.linalg.inv(x_matrix.T @ x_matrix) @ x_matrix.T @ y
 
-    x_points = np.linspace(min(y), max(y), 50)[:, 0]
+    x_points = np.linspace(min(x), max(x), 50)[:, 0]
     y_points = []
     for i in x_points:
         current_x = np.array([i ** power for power in range(k + 1)])
         y_points.append(np.dot(current_x, b).item())
-
     draw(xs, ys, x_points, y_points)
 
 
 def main():
-    data_path = r"data/data.txt"
+    try:
+        data_path = sys.argv[2]
+    except IndexError:
+        data_path = r"data/data.txt"
     xs, ys, n, k, info = read_file(data_path)
     if info is not None:
         print(info)

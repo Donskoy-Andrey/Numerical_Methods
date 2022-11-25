@@ -32,6 +32,7 @@ def dUdX(x: float, u: tuple) -> np.array:
     dUdX = f value = [U2, -U1 * cos(x)]
     """
     return np.array([u[1], -u[0] * np.cos(x)])
+    # return np.array([u[1], -x * u[1] + np.exp(-x*x)])
 
 
 def method(x0: float, h: float, initial_params: tuple, end: float,
@@ -63,7 +64,7 @@ def method(x0: float, h: float, initial_params: tuple, end: float,
     return u_values
 
 
-def main(start=0, end=1, initial_params=(1, 0)):
+def main(start=0, end=10, initial_params=(1, 0)):
     a_params, b_params, c_params = parsing_params()
 
     all_y, x_points, y_points = [], [], []
@@ -78,11 +79,25 @@ def main(start=0, end=1, initial_params=(1, 0)):
             x_points.append(int((end - start) / h))
             y_points.append(
                 np.max(
-                    abs(all_y[i] - all_y[i - 1][::int(hs[i] / hs[i-1])])
+                    abs(all_y[i] - all_y[i - 1][1::int(hs[i] / hs[i-1])])
                 )
             )
-
     draw_deviation(x_points, y_points)
 
+    mean_changing = 0
+    for i in range(0, len(y_points)-1):
+        mean_changing += y_points[i+1] / y_points[i]
+    mean_changing /= len(y_points) - 1
+    logging.info(f'\tMean changing = {mean_changing}')
+
+    '''
+    # TODO: Значения погрешности сравнить с h^3 (МНК)
+    with open('data/points.csv', 'w') as file:
+        for i in range(len(x_points)):
+            line = f'{x_points[i]} -{y_points[i]} \n'
+            file.write(line)
+
+    python3 ../Least\ Square\ Method/src/LSM.py 3 ./data/points.csv ../RK\ Method/data/images/output.png
+    '''
 
 main()

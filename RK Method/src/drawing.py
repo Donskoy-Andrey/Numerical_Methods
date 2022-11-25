@@ -25,7 +25,7 @@ def draw_deviation(x_points: list, y_points: list) -> None:
 
     axs[0].plot(x_points, y_points, c='black')
     axs[0].set_title('Standard graph', size=35)
-    axs[1].plot(np.log(x_points), np.log(y_points), c='red')
+    axs[1].plot(x_points, np.log(y_points), c='red')
     axs[1].set_title('Log graph', size=35)
     plt.savefig('data/images/deviation.png')
     logging.info(f"\tDeviation image saved.")
