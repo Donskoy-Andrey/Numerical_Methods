@@ -90,14 +90,5 @@ def main(start=0, end=10, initial_params=(1, 0)):
     mean_changing /= len(y_points) - 1
     logging.info(f'\tMean changing = {mean_changing}')
 
-    '''
-    # TODO: Значения погрешности сравнить с h^3 (МНК)
-    with open('data/points.csv', 'w') as file:
-        for i in range(len(x_points)):
-            line = f'{x_points[i]} -{y_points[i]} \n'
-            file.write(line)
-
-    python3 ../Least\ Square\ Method/src/LSM.py 3 ./data/points.csv ../RK\ Method/data/images/output.png
-    '''
 
 main()
