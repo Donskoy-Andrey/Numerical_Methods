@@ -1,7 +1,9 @@
-from drawing import draw
+from drawing import draw, draw_deviation
 import logging
+import numpy as np
 
 logging.getLogger().setLevel(logging.INFO)
+eps = 0.00001
 
 
 def dYdX(x, y):
@@ -22,54 +24,92 @@ def delta(x, yValues, h, delta_num):
 
 def method(start: float, h: float, initial_params: float, end: float) -> tuple:
     def ySolver(l: int, h: float) -> float:
-        return 1 + l * h + ((l * h) ** 2) / 2 + 4 * ((l * h) ** 3) / 6
+        return 1 + l * h + ((l * h) ** 2) / 2 + 3.2*2 * ((l * h) ** 3) / 6
 
-    steps = int((end - start) / h)
-    x = start
+    count = int((end - start) / h) + 1
+    steps = np.linspace(start, end, count)
 
-    all_x, all_y = [], []
+    all_y = []
 
     yValues = [initial_params,
                ySolver(1, h),
                ySolver(2, h),
                ySolver(3, h)]
 
-    all_x.extend([x, x + h, x + 2 * h])
+    yValues = [initial_params,
+               -(1*h)**2-2*1*h+3*np.exp(1*h) - 2,
+               -(2*h)**2-2*2*h+3*np.exp(2*h) - 2,
+               -(3*h)**2-2*3*h+3*np.exp(3*h) - 2]
+
     all_y.extend(yValues[:-1])
 
-    x += 3 * h
+    for step in steps[3:]:
 
-    for step in range(3, steps + 1):
-        fCurrent = dYdX(x, yValues[-1])
-        yPredicted = yValues[-1] + h * (
-                fCurrent
-                + 1 * delta(x, yValues, h, delta_num=1) / 2
-                + 5 * delta(x, yValues, h, delta_num=2) / 12
-                + 3 * delta(x, yValues, h, delta_num=3) / 8)
+        # fCurrent = dYdX(step, yValues[-1])
+        # yPredicted = yValues[-1] + h * (
+        #         fCurrent
+        #         + 1 * delta(step, yValues, h, delta_num=1) / 2
+        #         + 5 * delta(step, yValues, h, delta_num=2) / 12
+        #         + 3 * delta(step, yValues, h, delta_num=3) / 8
+        # )
+
+        yPredicted = yValues[-1] + h / 24 * (
+                55 * dYdX(step, yValues[-1])
+                - 59 * dYdX(step - 1 * h, yValues[-2])
+                + 37 * dYdX(step - 2 * h, yValues[-3])
+                - 9 * dYdX(step - 3 * h, yValues[-4])
+        )
 
         yValues.append(yPredicted)
-        fNext_predicted = dYdX(x + h, yValues[-1])
+        yBiased = 0
 
-        yBiased = yValues[-2] + h * (
-                fNext_predicted
-                - delta(x + h, yValues, h, delta_num=1) / 2
-                - delta(x + h, yValues, h, delta_num=2) / 12
-                - delta(x + h, yValues, h, delta_num=3) / 24)
-        yValues.append(yBiased)
+        # fNext_predicted = dYdX(step + h, yValues[-1])
+        # yBiased = yValues[-2] + h * (
+        #         fNext_predicted
+        #         - delta(step + h, yValues, h, delta_num=1) / 2
+        #         - delta(step + h, yValues, h, delta_num=2) / 12
+        #         - delta(step + h, yValues, h, delta_num=3) / 24
+        # )
+        while abs(yPredicted - yBiased) > eps:
+            yPredicted = yBiased
+            yBiased = yValues[-2] + h / 24 * (
+                    9 * dYdX(step + 1 * h, yValues[-1])
+                    + 19 * dYdX(step, yValues[-2])
+                    - 5 * dYdX(step - 1 * h, yValues[-3])
+                    + 1 * dYdX(step - 2 * h, yValues[-4])
+            )
 
-        x += h
-        all_x.append(x)
+        yValues = yValues[:-1] + [yBiased]
+
         all_y.append(yValues[-1])
-    return all_x, all_y
+    return steps, all_y
 
 
-def main(start=0, end=10, initial_params=0):
-    hs = [1, 0.5, 0.2, 0.01]
+def main(start=0, end=10, initial_params=1):
+    hs = [1/64, 1/32, 1/16, 1/8, 1/4, 1/2]
 
-    for h in hs:
+    x_points, y_points = [], []
+    measures = []
+
+    for i, h in enumerate(hs):
         logging.info(f'\tProcessing with h = {h}')
         all_x, all_y = method(start, h, initial_params, end)
         draw(all_x, all_y, h)
+        measures.append(all_y)
+        if i > 0:
+            x_points.append(int((end - start) / hs[i - 1]) + 1)
+            y_points.append(
+                np.max(
+                    abs(np.array(measures[i]) - np.array(measures[i - 1])[::int(hs[i] / hs[i-1])])
+                )
+            )
+    mean_changing = 0
+    for i in range(0, len(y_points) - 1):
+        mean_changing += y_points[i + 1] / y_points[i]
+        print(y_points[i + 1] / y_points[i])
+    mean_changing /= len(y_points) - 1
+    logging.info(f'\tMean changing = {mean_changing}')
+    draw_deviation(x_points, y_points)
 
 
 main()
