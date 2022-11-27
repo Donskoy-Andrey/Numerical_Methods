@@ -18,4 +18,4 @@ python3 src/main.py
 ```
 
 ## Пример работы
-![](https://github.com/Donskoy-Andrey/Numerical_Methods/blob/master/Adam%20Method/data/images/output-0.2.png?raw=true)
+![](https://github.com/Donskoy-Andrey/Numerical_Methods/blob/master/Adam%20Method/data/images/output-0.00625.png?raw=true)
