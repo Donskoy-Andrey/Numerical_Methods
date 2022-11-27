@@ -26,7 +26,6 @@ def draw_deviation(x_points: list, y_points: list) -> None:
         axs[i].set_ylabel('Error value', size=30)
         axs[i].set_xlabel('Amount of steps', size=30)
 
-    print(x_points, '\n', y_points)
     axs[0].plot(x_points, y_points, c='black')
     axs[0].scatter(x_points, y_points, c='black')
     axs[0].set_title('Standard graph', size=35)
