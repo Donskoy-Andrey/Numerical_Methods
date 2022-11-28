@@ -21,16 +21,16 @@ def draw(all_x, all_y, h):
 
 
 def draw_deviation(x_points: list, y_points: list) -> None:
-    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+    fig, axs = plt.subplots(1, 2, figsize=(20, 10))
     for i in range(2):
-        axs[i].set_ylabel('Error value', size=20)
-        axs[i].set_xlabel('Amount of steps', size=20)
+        axs[i].set_ylabel('Error value', size=30)
+        axs[i].set_xlabel('Amount of steps', size=30)
 
     axs[0].plot(x_points, y_points, c='black')
     axs[0].scatter(x_points, y_points, c='black')
-    axs[0].set_title('Standard graph', size=25)
+    axs[0].set_title('Standard graph', size=35)
     axs[1].plot(x_points, np.log(y_points), c='red')
     axs[1].scatter(x_points, np.log(y_points), c='red')
-    axs[1].set_title('Log graph', size=25)
+    axs[1].set_title('Log graph', size=35)
     plt.savefig('data/images/deviation.png')
     logging.info(f"\tDeviation image saved.")
