@@ -16,7 +16,7 @@ def draw(all_x, all_y, h, euler_y):
     plt.plot(all_x, all_y, c='black')
     plt.plot(x_real, y_real, c='red')
     plt.plot(all_x, euler_y, c='blue')
-    plt.legend(['Adam', 'Real', 'Eiler'], prop={'size': 10})
+    plt.legend(['Adam', 'Real', 'Euler'], prop={'size': 10})
     plt.savefig(f'data/images/output-{h}.png')
     logging.info('\tImage saved.\n')
 
@@ -34,7 +34,7 @@ def draw_deviation(x_points: list, y_points: list, y_points_euler: list) -> None
     axs[0].scatter(x_points, y_points_euler, c='blue')
 
     axs[0].set_title('Standard graph', size=35)
-    axs[0].legend(['Adam', '', 'Eiler', ''])
+    axs[0].legend(['Adam', '', 'Euler', ''])
 
     axs[1].plot(x_points, np.log(y_points), c='red')
     axs[1].scatter(x_points, np.log(y_points), c='red')
@@ -44,6 +44,6 @@ def draw_deviation(x_points: list, y_points: list, y_points_euler: list) -> None
 
     axs[1].set_title('Log graph', size=35)
 
-    axs[1].legend(['Adam', '', 'Eiler', ''])
+    axs[1].legend(['Adam', '', 'Euler', ''])
     plt.savefig('data/images/deviation.png')
     logging.info(f"\tDeviation image saved.")
