@@ -83,7 +83,7 @@ def main(start=0, end=10, initial_params=1):
     for i in range(len(y_points) - 1, 0, -1):
         changing.append(y_points[i] / y_points[i - 1])
 
-    logging.info(f'\tMean changing = {changing}')
+    logging.info(f'\tChanging = {changing}')
     draw_deviation(x_points, y_points)
 
 
