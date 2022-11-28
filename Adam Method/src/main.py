@@ -10,7 +10,7 @@ def dYdX(x, y):
     return y + x**2
 
 
-def delta(x, yValues, h, delta_num):
+def delta(x: float, yValues: list, h: float, delta_num: int) -> float:
     fCurrent = dYdX(x, yValues[-1])
     fMinus1 = dYdX(x - 1 * h, yValues[-2])
     fMinus2 = dYdX(x - 2 * h, yValues[-3])
@@ -21,7 +21,16 @@ def delta(x, yValues, h, delta_num):
             fCurrent - 3 * fMinus1 + 3 * fMinus2 - fMinus3][delta_num-1]
 
 
-def method(start: float, h: float, initial_params: float, end: float) -> tuple:
+def euler(start: float, h: float, initial_params: float, end: float) -> list:
+    count = int((end - start) / h) + 1
+    steps = np.linspace(start, end, count)
+    euler_y = [initial_params]
+    for step in steps[1:]:
+        euler_y.append(euler_y[-1] + h * dYdX(step - h, euler_y[-1]))
+    return euler_y
+
+
+def adam(start: float, h: float, initial_params: float, end: float) -> tuple:
     def ySolver(l: int, h: float) -> float:
         return 1 + l * h + ((l * h) ** 2) / 2 + 3 * ((l * h) ** 3) / 6
 
@@ -55,7 +64,8 @@ def method(start: float, h: float, initial_params: float, end: float) -> tuple:
 
         yValues = yValues[:-1] + [yBiased]
         all_y.append(yValues[-1])
-    return steps, all_y
+    euler_y = euler(start, h, initial_params, end)
+    return steps, all_y, euler_y
 
 
 def main(start=0, end=10, initial_params=1):
@@ -63,13 +73,16 @@ def main(start=0, end=10, initial_params=1):
 
     x_points, y_points = [], []
     measures = []
+    measures_euler = []
+    y_points_euler = []
 
     for i, h in enumerate(hs):
         logging.info(f'\tProcessing with h = {h}')
-        all_x, all_y = method(start, h, initial_params, end)
+        all_x, all_y, eiler_y = adam(start, h, initial_params, end)
 
-        draw(all_x, all_y, h)
+        draw(all_x, all_y, h, eiler_y)
         measures.append(all_y)
+        measures_euler.append(eiler_y)
 
         if i > 0:
             x_points.append(int((end - start) / hs[i - 1]) + 1)
@@ -78,13 +91,21 @@ def main(start=0, end=10, initial_params=1):
                     abs(np.array(measures[i]) - np.array(measures[i - 1])[::int(hs[i] / hs[i-1])])
                 )
             )
+            y_points_euler.append(
+                np.max(
+                    abs(np.array(measures_euler[i]) - np.array(measures_euler[i - 1])[::int(hs[i] / hs[i-1])])
+                )
+            )
 
-    changing = []
+    changing_adam = []
+    changing_euler = []
     for i in range(len(y_points) - 1, 0, -1):
-        changing.append(y_points[i] / y_points[i - 1])
+        changing_adam.append(y_points[i] / y_points[i - 1])
+        changing_euler.append(y_points_euler[i] / y_points_euler[i - 1])
 
-    logging.info(f'\tChanging = {changing}')
-    draw_deviation(x_points, y_points)
+    logging.info(f'\tAdam changing = {changing_adam}')
+    logging.info(f'\tEuler changing = {changing_euler}')
+    draw_deviation(x_points, y_points, y_points_euler)
 
 
 main()
