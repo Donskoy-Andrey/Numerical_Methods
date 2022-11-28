@@ -3,7 +3,6 @@ import logging
 import numpy as np
 
 logging.getLogger().setLevel(logging.INFO)
-eps = 0.0000001
 
 
 def dYdX(x, y):
@@ -11,13 +10,23 @@ def dYdX(x, y):
     return y + x**2
 
 
+def delta(x, yValues, h, delta_num):
+    fCurrent = dYdX(x, yValues[-1])
+    fMinus1 = dYdX(x - 1 * h, yValues[-2])
+    fMinus2 = dYdX(x - 2 * h, yValues[-3])
+    fMinus3 = dYdX(x - 3 * h, yValues[-4])
+
+    return [fCurrent - fMinus1,
+            fCurrent - 2 * fMinus1 + fMinus2,
+            fCurrent - 3 * fMinus1 + 3 * fMinus2 - fMinus3][delta_num-1]
+
+
 def method(start: float, h: float, initial_params: float, end: float) -> tuple:
     def ySolver(l: int, h: float) -> float:
-        return 1 + l * h + ((l * h) ** 2) / 2 + 3.2*2 * ((l * h) ** 3) / 6
+        return 1 + l * h + ((l * h) ** 2) / 2 + 3 * ((l * h) ** 3) / 6
 
     count = int((end - start) / h) + 1
     steps = np.linspace(start, end, count)
-
     all_y = []
 
     yValues = [initial_params,
@@ -25,27 +34,24 @@ def method(start: float, h: float, initial_params: float, end: float) -> tuple:
                ySolver(2, h),
                ySolver(3, h)]
 
-    all_y.extend(yValues[:-1])
+    all_y.extend(yValues)
 
-    for step in steps[3:]:
-        yPredicted = yValues[-1] + h / 24 * (
-                55 * dYdX(step, yValues[-1])
-                - 59 * dYdX(step - 1 * h, yValues[-2])
-                + 37 * dYdX(step - 2 * h, yValues[-3])
-                - 9 * dYdX(step - 3 * h, yValues[-4])
-        )
+    for step in steps[3:-1]:
+        fCurrent = dYdX(step, yValues[-1])
+        yPredicted = yValues[-1] + h * (
+                fCurrent
+                + 1 * delta(step, yValues, h, delta_num=1) / 2
+                + 5 * delta(step, yValues, h, delta_num=2) / 12
+                + 3 * delta(step, yValues, h, delta_num=3) / 8)
 
         yValues.append(yPredicted)
-        yBiased = 0
+        fNext_predicted = dYdX(step + h, yValues[-1])
 
-        while abs(yPredicted - yBiased) > eps:
-            yPredicted = yBiased
-            yBiased = yValues[-2] + h / 24 * (
-                    9 * dYdX(step + 1 * h, yValues[-1])
-                    + 19 * dYdX(step + 0 * h, yValues[-2])
-                    - 5 * dYdX(step - 1 * h, yValues[-3])
-                    + 1 * dYdX(step - 2 * h, yValues[-4])
-            )
+        yBiased = yValues[-2] + h * (
+                fNext_predicted
+                - delta(step + h, yValues, h, delta_num=1) / 2
+                - delta(step + h, yValues, h, delta_num=2) / 12
+                - delta(step + h, yValues, h, delta_num=3) / 24)
 
         yValues = yValues[:-1] + [yBiased]
         all_y.append(yValues[-1])
@@ -53,7 +59,7 @@ def method(start: float, h: float, initial_params: float, end: float) -> tuple:
 
 
 def main(start=0, end=10, initial_params=1):
-    hs = [1/128, 1/64, 1/32, 1/16, 1/8, 1/4, 1/2]
+    hs = [1/2**i for i in range(8, 0, -1)]
 
     x_points, y_points = [], []
     measures = []
@@ -61,6 +67,7 @@ def main(start=0, end=10, initial_params=1):
     for i, h in enumerate(hs):
         logging.info(f'\tProcessing with h = {h}')
         all_x, all_y = method(start, h, initial_params, end)
+
         draw(all_x, all_y, h)
         measures.append(all_y)
 
@@ -72,11 +79,11 @@ def main(start=0, end=10, initial_params=1):
                 )
             )
 
-    mean_changing = 0
-    for i in range(0, len(y_points) - 1):
-        mean_changing += y_points[i + 1] / y_points[i]
-    mean_changing /= len(y_points) - 1
-    logging.info(f'\tMean changing = {mean_changing}')
+    changing = []
+    for i in range(len(y_points) - 1, 0, -1):
+        changing.append(y_points[i] / y_points[i - 1])
+
+    logging.info(f'\tMean changing = {changing}')
     draw_deviation(x_points, y_points)
 
 
