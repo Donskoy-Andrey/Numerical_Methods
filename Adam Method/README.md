@@ -19,4 +19,4 @@ python3 src/main.py
 
 ## Пример работы
 ![](https://github.com/Donskoy-Andrey/Numerical_Methods/blob/master/Adam%20Method/data/images/output-0.0625.png?raw=true)
-![](https://github.com/Donskoy-Andrey/Numerical_Methods/blob/master/Adam%20Method/data/images/output-deviation.png?raw=true)
+![](https://github.com/Donskoy-Andrey/Numerical_Methods/blob/master/Adam%20Method/data/images/deviation.png?raw=true)
