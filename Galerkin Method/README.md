@@ -19,6 +19,11 @@ python3 src/main.py
 ```
 
 ## Пример работы
-![](https://github.com/Donskoy-Andrey/Numeric_Methods/blob/master/Galerkin%20Method/data/images/output-128.png?raw=true)
 
-![](https://github.com/Donskoy-Andrey/Numeric_Methods/blob/master/Galerkin%20Method/data/images/deviation.png?raw=true)
+<p align="center">
+  <img src="https://github.com/Donskoy-Andrey/Numeric_Methods/blob/master/Galerkin%20Method/data/images/output-128.png?raw=true">
+</p>
+
+<p align="center">
+  <img src="https://github.com/Donskoy-Andrey/Numeric_Methods/blob/master/Galerkin%20Method/data/images/deviation.png?raw=true">
+</p>
