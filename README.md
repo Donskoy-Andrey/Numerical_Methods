@@ -5,3 +5,5 @@
 обыкновенного дифференциального уравнения второго порядка.
 3. [**Adam Method**](https://github.com/Donskoy-Andrey/Numerical_Methods/tree/master/Adam%20Method) — интерполяционная разностная схема Адамса 4 порядка для решения задачи Коши, заданной для 
 дифференциального уравнения первого порядка.
+4. [**Galerkin Method**](https://github.com/Donskoy-Andrey/Numerical_Methods/tree/master/Galerkin%20Method) — конечномерное приближение к решению краевой задачи для 
+дифференциального уравнения второго порядка.
