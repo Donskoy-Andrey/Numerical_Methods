@@ -14,9 +14,7 @@ def solve(interval: tuple, h: float, name: str = None):
     params = Params(phi)
     size = phi.size
 
-    x_v = [left]
-    for i in range(0, size):
-        x_v.append(x_v[i] + h)
+    x_v = np.linspace(left, right, size + 1)
 
     a_params = np.zeros((size - 1, size - 1))
     b_params = np.zeros((size - 1))
@@ -24,6 +22,7 @@ def solve(interval: tuple, h: float, name: str = None):
     for i in range(1, size - 1):
         for j in range(i - 1, i + 2):
             a_params[i - 1, j - 1] = params.a_params(i, j, x_v)
+
     a_params[size - 2, size - 2] = params.a_params(size - 1, size - 1, x_v)
     a_params[size - 2, size - 3] = params.a_params(size - 1, size - 2, x_v)
 

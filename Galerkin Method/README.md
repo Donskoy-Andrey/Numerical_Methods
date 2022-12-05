@@ -4,7 +4,7 @@
 дифференциального уравнения второго порядка, представленного ниже:
     
 <p align="center">
-  <img src="data/images/img.png">
+  <img src="data/images/equation.svg">
 </p>
 
 ## Ход решения

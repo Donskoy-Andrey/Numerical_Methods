@@ -53,11 +53,10 @@ class Params:
         f = lambda x: (
                 -1 * self.phi.derivative_1(i, x, x_v) * self.phi.derivative_1(j, x, x_v) +
                 -3 * self.phi.derivative_1(i, x, x_v) * self.phi.func(j, x, x_v) +
-                      -1 * self.phi.func(i, x, x_v) * self.phi.func(j, x, x_v)
+                -1 * self.phi.func(i, x, x_v) * self.phi.func(j, x, x_v)
         )
         return self.phi.integrate(f)
 
     def b_params(self, i, x_v):
         f = lambda x: (4 * x + 6) * self.phi.func(i, x, x_v)
         return self.phi.integrate(f)
-

@@ -13,7 +13,7 @@ def real_solution(x):
             ) / (np.exp(3 / 2) * (np.exp(np.sqrt(13)) - 1))
 
 
-def draw(left: float, right: float, x_v: list, y_v: list, name: str) -> None:
+def draw(left: float, right: float, x_v: np.array, y_v: list, name: str) -> None:
     plt.figure()
     plt.title(f'Solution', c='black', size=20)
     xs = np.linspace(left, right, 1000)
